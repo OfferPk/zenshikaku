@@ -1,0 +1,18 @@
+{
+  "name": "ZenShikaku - Tatami Logic",
+  "short_name": "ZenShikaku",
+  "description": "Serene Japanese Tatami Room Logic Puzzle (Divide by Rectangles)",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141915",
+  "theme_color": "#141915",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
