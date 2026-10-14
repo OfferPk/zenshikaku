@@ -1,0 +1,28 @@
+{
+  "name": "zenshikaku",
+  "version": "1.0.0",
+  "description": "ZenShikaku: Calm, meditative Japanese Shikaku (四角に切れ / Divide by Rectangles) tatami room logic puzzle",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "node --test test/engine.test.js",
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "shikaku",
+    "tatami",
+    "divide-by-rectangles",
+    "logic-puzzle",
+    "nikoli",
+    "zen",
+    "pwa",
+    "capacitor",
+    "offline-game"
+  ],
+  "author": "OfferPk",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  }
+}
