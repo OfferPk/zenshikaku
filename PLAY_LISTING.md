@@ -1,41 +1,66 @@
-# Google Play Store Listing: ZenShikaku
+# Google Play Store Listing — ZenShikaku
 
-## App Title (25 / 30 chars)
-ZenShikaku: Tatami Logic
+## Title (30 characters max)
+ZenShikaku: Tatami Room Logic
 
-## Short Description (79 / 80 chars)
-Divide grids into peaceful tatami rooms matching number clues. Calm logic puzzle.
+## Short Description (80 characters max)
+Partition peaceful Japanese floorplans into harmonious tatami rooms. Offline.
 
-## Full Description
-Immerse yourself in ZenShikaku (四角に切れ / Shikaku), a serene Japanese grid-partitioning logic puzzle set within the tranquil beauty of traditional tea houses and temple courtyards.
+## Full Description (4,000 characters max)
+Step into the serene quietude of a traditional Japanese tea house with ZenShikaku, a calm and contemplative logic puzzle inspired by the revered Nikoli puzzle Shikaku (四角に切れ / Divide by Rectangles).
 
-Your objective is simple yet profoundly satisfying: partition each floorplan into non-overlapping rectangular and square tatami rooms. Every room must enclose exactly one number clue, with its area (width × height) precisely matching that number. When every cell on the floor is covered by a harmonious tatami mat, the floorplan is perfected.
+In ZenShikaku, you become the architect of peaceful traditional pavilions, tea gardens, and Buddhist temple sanctuaries. Your purpose is simple, satisfying, and deeply grounding: partition the wooden floorplan into rectangular and square tatami rooms so that every room encloses exactly one numbered clue matching its area, leaving no empty gaps or overlapping spaces.
 
-### Features
-- **50 Handcrafted Puzzles**: 5 difficulty packs ranging from gentle morning paths to intricate imperial temple masterworks:
-  - Pack 1: Tea Garden (5×5)
-  - Pack 2: Shoji Pavilion (6×6)
-  - Pack 3: Tatami Courtyard (7×7)
-  - Pack 4: Bamboo Sanctuary (8×8)
-  - Pack 5: Imperial Temple (9×9)
-- **100% Logic Verified**: Every single puzzle has a verified unique mathematical solution. Zero guessing is ever required.
-- **Intuitive Tactile Controls**: Drag effortlessly from corner to corner to draw tatami rooms, or tap corners in two-tap mode. Live dimension feedback (W × H = Area) shows real-time sizes as you draw.
-- **Procedural Japanese Acoustics**: Synthesized Web Audio featuring sliding shoji paper screens, resonant wooden tatami placement thuds, crisp bamboo water clacks, and resonant Buddhist temple victory bells (Bonshō 梵鐘).
-- **Deductive Hint Engine**: Stuck on a difficult layout? The intelligent deductive hint engine points out forced dimensions, corner constraints, and orphaned cells without giving away the entire solution.
-- **Pure Offline Solitude**: 100% offline, zero internet connection required, zero ads, zero trackers, and zero in-app purchases.
-- **Unlimited Undo & Progress Saving**: Freely experiment with room arrangements, undo moves at any time, and your progress is always saved locally on your device.
+=== THE RULES OF SHIKAKU ===
+1. Rectangular Tatami Rooms: Partition the floorplan into non-overlapping rectangular and square rooms.
+2. One Number Per Room: Every room must contain exactly one number clue inside its boundaries.
+3. Area Equals Clue: The room's total area (Width × Height in cells) must equal the number clue it encloses. A clue of 6 can be a 1×6, 6×1, 2×3, or 3×2 room.
+4. Harmonious Floor Tiling: Every cell on the floor must belong to exactly one room with no unassigned spaces.
 
-### Category
-Puzzle / Casual / Brain Games
+=== 50 HANDCRAFTED TEMPLE PACKS ===
+Journey through 50 meticulously designed, solver-verified levels across 5 peaceful difficulty tiers:
+• Tea Garden (5×5): Morning paths and gentle small-chamber divisions to master basic factoring.
+• Shoji Pavilion (6×6): Sliding paper screen rooms introducing prime factoring and corner bounds.
+• Tatami Courtyard (7×7): Balanced architectural chambers demanding careful reachability deduction.
+• Bamboo Sanctuary (8×8): Expansive woven floorplans with complex interlocking room configurations.
+• Imperial Temple (9×9): Master-tier grand hall floorplans rewarding pure logical clarity.
 
-### Content Rating Notes
-Rated for Everyone (PEGI 3, ESRB Everyone). Contains no violence, no mature content, no user-to-user communications.
+=== PROCEDURAL TATAMI & SHOJI ACOUSTICS ===
+ZenShikaku features a custom procedural Web Audio acoustic synthesizer. Every acoustic tone is generated dynamically in real time without prerecorded samples:
+• Gentle sliding paper screen ticks as you drag to shape tatami rooms.
+• Warm, tactile tatami mat placement thuds.
+• Crisp bamboo clacks (*Shishi-odoshi*) when a room perfectly satisfies its clue area.
+• Subtle wooden warning tones if rooms conflict or overlap.
+• A deep, resonant Japanese temple victory gong (*Bonshō* 梵鐘) with harmonic overtones when the floorplan is completely harmonized.
 
-### Privacy Declaration
-- **Data Collected**: None.
-- **Third-Party SDKs**: None.
-- **Network Permissions**: None required for gameplay.
-- **Account Creation**: None.
+=== INTUITIVE TOUCH CONTROLS & HINT ENGINE ===
+• Fluid Touch Drawing: Drag from corner to corner to draw rooms, or tap two corners for precise placement.
+• Live Dimension Preview: Floating indicator displays current Width × Height = Area and checks against clues in real time.
+• Easy Room Removal: Simply tap any existing room to remove it.
+• Smart Deductive Hints: Step-by-step logic guidance explaining prime factors, corner constraints, and forced boundaries.
+• Full Unlimited Undo & Reset: Experiment freely without stress.
+• 100% Offline & Private: No internet required. Zero ads, zero trackers, and zero telemetry.
 
-### Keywords
-shikaku, divide by box, rectangles, tatami, nikoli, logic puzzle, japanese puzzle, brain teaser, offline puzzle, calming puzzle, zen game
+Find your peace in the quiet elegance of geometric balance. Welcome to ZenShikaku.
+
+## Category
+Puzzle / Brain Games / Casual
+
+## Content Rating
+Everyone (PEGI 3, ESRB Everyone). Contains no violence, no suggestive themes, and no user interactions.
+
+## Privacy Statement
+ZenShikaku does not collect, transmit, store, or share any personal information, location data, device identifiers, or analytics. Progress and audio settings are saved exclusively on your local device. The game operates entirely offline without network communication.
+
+## Feature List
+- 50 handcrafted, 100% solver-verified levels
+- 5 difficulty tiers from 5×5 to 9×9
+- Pure procedural Web Audio tatami and temple gong acoustics
+- Fluid drag-and-drop & two-tap rectangle drawing
+- Live dimension preview (W × H = Area)
+- Smart deductive hint engine
+- Full unlimited undo and floorplan reset
+- Zero ads, zero tracking, 100% offline play
+
+## Keywords
+shikaku, divide by rectangles, nikoli puzzle, japanese logic puzzle, tatami, zen puzzle, offline game, brain trainer, math puzzle, calm puzzle, floorplan puzzle, geometry puzzle

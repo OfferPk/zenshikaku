@@ -1,38 +1,25 @@
 const fs = require('fs');
 const path = require('path');
 
-const rootDir = path.resolve(__dirname, '..');
-const srcDir = path.join(rootDir, 'src');
-const wwwDir = path.join(rootDir, 'www');
+const srcDir = path.join(__dirname, '..', 'src');
+const wwwDir = path.join(__dirname, '..', 'www');
 
 if (!fs.existsSync(wwwDir)) {
   fs.mkdirSync(wwwDir, { recursive: true });
 }
 
-const files = [
-  'index.html',
-  'styles.css',
-  'app.js',
-  'levels.js',
-  'shikaku-engine.js',
-  'audio.js',
-  'icon.svg',
-  'manifest.json',
-  'sw.js'
-];
-
-files.forEach(file => {
-  const src = path.join(srcDir, file);
-  const dest = path.join(wwwDir, file);
-  if (fs.existsSync(src)) {
-    fs.copyFileSync(src, dest);
-    // Also mirror to root for direct Pages serving
-    fs.copyFileSync(src, path.join(rootDir, file));
-    console.log(`Copied ${file} -> www/ and root`);
+// Copy all assets from src to www
+const files = fs.readdirSync(srcDir);
+for (const file of files) {
+  const srcFile = path.join(srcDir, file);
+  const destFile = path.join(wwwDir, file);
+  if (fs.statSync(srcFile).isFile()) {
+    fs.copyFileSync(srcFile, destFile);
+    console.log(`Copied ${file} -> www/`);
   }
-});
+}
 
-// Write .nojekyll in www and root
+// Ensure .nojekyll exists for GitHub Pages
 fs.writeFileSync(path.join(wwwDir, '.nojekyll'), '');
-fs.writeFileSync(path.join(rootDir, '.nojekyll'), '');
-console.log('ZenShikaku build completed successfully!');
+console.log('Created www/.nojekyll');
+console.log('Build complete! Assets ready in www/');

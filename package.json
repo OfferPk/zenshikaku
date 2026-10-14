@@ -1,7 +1,7 @@
 {
   "name": "zenshikaku",
   "version": "1.0.0",
-  "description": "ZenShikaku: Serene Japanese Tatami Room Logic (Shikaku / 四角に切れ) offline puzzle",
+  "description": "ZenShikaku: Calm, meditative Japanese Shikaku (四角に切れ / Divide by Rectangles) tatami room logic puzzle",
   "main": "src/app.js",
   "scripts": {
     "test": "node --test test/engine.test.js",
@@ -9,9 +9,8 @@
   },
   "keywords": [
     "shikaku",
-    "rectangles",
-    "divide-by-box",
     "tatami",
+    "divide-by-rectangles",
     "logic-puzzle",
     "nikoli",
     "zen",
