@@ -197,7 +197,16 @@
   /**
    * Evaluate full board state: coverage, validity, and win status.
    */
-  function checkBoardState(level, rooms) {
+  function checkBoardState(arg1, arg2) {
+    let level, rooms;
+    if (arg1 && arg1.rooms && Array.isArray(arg1.rooms)) {
+      rooms = arg1.rooms;
+      level = arg2;
+    } else {
+      level = arg1;
+      rooms = arg2 || [];
+    }
+
     const totalCells = level.width * level.height;
     const grid = Array.from({ length: level.height }, () => Array(level.width).fill(null));
     let overlaps = 0;
@@ -232,14 +241,31 @@
     const allRoomsValid = validRooms === rooms.length && rooms.length === level.clues.length;
     const isSolved = allCellsCovered && noOverlaps && allRoomsValid;
 
+    // Check individual clue statuses for UI coloring
+    const clueStatuses = level.clues.map(clue => {
+      const containingRoom = getRoomAt(rooms, clue.r, clue.c);
+      if (!containingRoom) {
+        return { clue, status: 'PENDING', room: null };
+      }
+      const st = getRoomStatus(level, containingRoom);
+      return {
+        clue,
+        status: st.valid ? 'SATISFIED' : (st.reason === 'MULTIPLE_CLUES' ? 'CONFLICT' : 'VIOLATED'),
+        room: containingRoom
+      };
+    });
+
     return {
-      isSolved,
+      solved: isSolved,
+      isSolved: isSolved,
       coveredCells,
       totalCells,
       coveragePercent: Math.round((coveredCells / totalCells) * 100),
       overlaps,
       validRooms,
+      satisfiedClues: validRooms,
       totalRooms: rooms.length,
+      details: clueStatuses,
       roomEvaluations
     };
   }
@@ -296,36 +322,57 @@
 
   /**
    * Smart deductive hint engine.
-   * Returns a step-by-step hint object { type, text, highlight: { r1, c1, r2, c2 }, clue }
+   * Returns a step-by-step hint object { type, text, message, highlight, rect, clue }
    */
-  function getDeductiveHint(level, rooms) {
+  function getDeductiveHint(arg1, arg2) {
+    let level, rooms;
+    if (arg1 && arg1.rooms && Array.isArray(arg1.rooms)) {
+      rooms = arg1.rooms;
+      level = arg2;
+    } else {
+      level = arg1;
+      rooms = arg2 || [];
+    }
+
     // 1. Check existing rooms for critical errors
     for (const room of rooms) {
       const status = getRoomStatus(level, room);
       if (!status.valid) {
         if (status.reason === 'MULTIPLE_CLUES') {
+          const text = `A room contains multiple numbers. Each room must enclose exactly one number clue.`;
+          const highlight = { r1: room.r1, c1: room.c1, r2: room.r2, c2: room.c2 };
           return {
             type: 'error',
             title: 'Divided Attention',
-            text: `A room contains multiple numbers. Each room must enclose exactly one number clue.`,
-            highlight: { r1: room.r1, c1: room.c1, r2: room.r2, c2: room.c2 },
+            text,
+            message: text,
+            highlight,
+            rect: highlight,
             clue: status.clues[0]
           };
         }
         if (status.reason === 'NO_CLUE') {
+          const text = `This room does not enclose any number clue. Tap it to clear or resize it.`;
+          const highlight = { r1: room.r1, c1: room.c1, r2: room.r2, c2: room.c2 };
           return {
             type: 'error',
             title: 'Empty Room',
-            text: `This room does not enclose any number clue. Tap it to clear or resize it.`,
-            highlight: { r1: room.r1, c1: room.c1, r2: room.r2, c2: room.c2 }
+            text,
+            message: text,
+            highlight,
+            rect: highlight
           };
         }
         if (status.reason === 'WRONG_AREA') {
+          const text = `Room has area ${status.area}, but the clue requires ${status.targetArea}.`;
+          const highlight = { r1: room.r1, c1: room.c1, r2: room.r2, c2: room.c2 };
           return {
             type: 'error',
             title: 'Mismatched Size',
-            text: `Room has area ${status.area}, but the clue requires ${status.targetArea}.`,
-            highlight: { r1: room.r1, c1: room.c1, r2: room.r2, c2: room.c2 },
+            text,
+            message: text,
+            highlight,
+            rect: highlight,
             clue: status.clue
           };
         }
@@ -337,11 +384,15 @@
       if (clue.val === 1) {
         const room = getRoomAt(rooms, clue.r, clue.c);
         if (!room || room.r1 !== clue.r || room.r2 !== clue.r || room.c1 !== clue.c || room.c2 !== clue.c) {
+          const text = `The number 1 at row ${clue.r + 1}, col ${clue.c + 1} must always be a 1×1 room occupying just its own cell.`;
+          const highlight = { r1: clue.r, c1: clue.c, r2: clue.r, c2: clue.c };
           return {
             type: 'deduction',
             title: 'Single Cell Room',
-            text: `The number 1 at row ${clue.r + 1}, col ${clue.c + 1} must always be a 1×1 room occupying just its own cell.`,
-            highlight: { r1: clue.r, c1: clue.c, r2: clue.r, c2: clue.c },
+            text,
+            message: text,
+            highlight,
+            rect: highlight,
             clue
           };
         }
@@ -360,11 +411,15 @@
       const allPlacements = getPossiblePlacementsForClue(level, clue);
       if (allPlacements.length === 1) {
         const p = allPlacements[0];
+        const text = `The number ${clue.val} at row ${clue.r + 1}, col ${clue.c + 1} has only one valid placement on the board: a ${p.width}×${p.height} room.`;
+        const highlight = { r1: p.r1, c1: p.c1, r2: p.r2, c2: p.c2 };
         return {
           type: 'deduction',
           title: 'Forced Dimensions',
-          text: `The number ${clue.val} at row ${clue.r + 1}, col ${clue.c + 1} has only one valid placement on the board: a ${p.width}×${p.height} room.`,
-          highlight: { r1: p.r1, c1: p.c1, r2: p.r2, c2: p.c2 },
+          text,
+          message: text,
+          highlight,
+          rect: highlight,
           clue
         };
       }
@@ -384,11 +439,15 @@
 
           if (reachingClues.length === 1) {
             const onlyClue = reachingClues[0];
+            const text = `The cell at row ${r + 1}, col ${c + 1} can only ever be reached by the number ${onlyClue.val} at row ${onlyClue.r + 1}, col ${onlyClue.c + 1}.`;
+            const highlight = { r1: r, c1: c, r2: r, c2: c };
             return {
               type: 'reachability',
               title: 'Orphaned Cell',
-              text: `The cell at row ${r + 1}, col ${c + 1} can only ever be reached by the number ${onlyClue.val} at row ${onlyClue.r + 1}, col ${onlyClue.c + 1}.`,
-              highlight: { r1: r, c1: c, r2: r, c2: c },
+              text,
+              message: text,
+              highlight,
+              rect: highlight,
               clue: onlyClue
             };
           }
@@ -399,11 +458,15 @@
     // 5. General guidance
     if (unplacedClues.length > 0) {
       const candidate = unplacedClues[0];
+      const text = `Consider number ${candidate.val} at row ${candidate.r + 1}, col ${candidate.c + 1}. Try factoring it into possible dimensions.`;
+      const highlight = { r1: candidate.r, c1: candidate.c, r2: candidate.r, c2: candidate.c };
       return {
         type: 'guide',
         title: 'Tatami Expansion',
-        text: `Consider number ${candidate.val} at row ${candidate.r + 1}, col ${candidate.c + 1}. Try factoring it into possible dimensions.`,
-        highlight: { r1: candidate.r, c1: candidate.c, r2: candidate.r, c2: candidate.c },
+        text,
+        message: text,
+        highlight,
+        rect: highlight,
         clue: candidate
       };
     }
@@ -412,7 +475,9 @@
       type: 'complete',
       title: 'Floorplan Complete',
       text: 'Every tatami room is placed and aligned!',
-      highlight: null
+      message: 'Every tatami room is placed and aligned!',
+      highlight: null,
+      rect: null
     };
   }
 
