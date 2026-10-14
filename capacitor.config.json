@@ -1,0 +1,6 @@
+{
+  "appId": "pk.offer.zenshikaku",
+  "appName": "ZenShikaku",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
