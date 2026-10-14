@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a332d" />
+      <stop offset="100%" stop-color="#141a16" />
+    </linearGradient>
+    <linearGradient id="tatami1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#587951" />
+      <stop offset="100%" stop-color="#415e3b" />
+    </linearGradient>
+    <linearGradient id="tatami2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a758" />
+      <stop offset="100%" stop-color="#a8853b" />
+    </linearGradient>
+    <linearGradient id="tatami3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#708f86" />
+      <stop offset="100%" stop-color="#4d6961" />
+    </linearGradient>
+    <linearGradient id="tatami4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8c6f50" />
+      <stop offset="100%" stop-color="#694f36" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)" />
+
+  <!-- Outer Bamboo Frame -->
+  <rect x="44" y="44" width="424" height="424" rx="48" fill="none" stroke="#a68a56" stroke-width="6" opacity="0.4" />
+  <rect x="56" y="56" width="400" height="400" rx="38" fill="#1b211d" filter="url(#shadow)" />
+
+  <!-- Shikaku Tatami Partition Rooms -->
+  <!-- Top Left: 2x2 Room (value 4) -->
+  <rect x="76" y="76" width="170" height="170" rx="16" fill="url(#tatami1)" stroke="#89b080" stroke-width="4" />
+  <circle cx="161" cy="161" r="28" fill="#1b211d" opacity="0.85" />
+  <text x="161" y="171" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="28" fill="#e8f0e6" text-anchor="middle">4</text>
+
+  <!-- Top Right: 2x1 Room (value 2) -->
+  <rect x="266" y="76" width="170" height="80" rx="16" fill="url(#tatami2)" stroke="#ecd28c" stroke-width="4" />
+  <circle cx="351" cy="116" r="24" fill="#1b211d" opacity="0.85" />
+  <text x="351" y="125" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="24" fill="#fdf6e2" text-anchor="middle">2</text>
+
+  <!-- Middle Right: 2x1 Room (value 2) -->
+  <rect x="266" y="166" width="170" height="80" rx="16" fill="url(#tatami3)" stroke="#9bc2b8" stroke-width="4" />
+  <circle cx="351" cy="206" r="24" fill="#1b211d" opacity="0.85" />
+  <text x="351" y="215" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="24" fill="#e4f2ee" text-anchor="middle">2</text>
+
+  <!-- Bottom: 4x2 Room (value 8) -->
+  <rect x="76" y="266" width="360" height="170" rx="16" fill="url(#tatami4)" stroke="#ba9a76" stroke-width="4" />
+  <circle cx="256" cy="351" r="34" fill="#1b211d" opacity="0.85" />
+  <text x="256" y="363" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="34" fill="#fcf6ec" text-anchor="middle">8</text>
+
+  <!-- Japanese Hanko Seal / Stamp -->
+  <rect x="400" y="38" width="70" height="70" rx="12" fill="#a8382b" opacity="0.85" />
+  <text x="435" y="66" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">四角</text>
+  <text x="435" y="94" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">切れ</text>
+</svg>
