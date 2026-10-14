@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ZenShikaku - Tatami Room Logic Puzzle</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <meta name="theme-color" content="#141915">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">四</div>
+        <div>
+          <h1 class="brand-title">ZenShikaku</h1>
+          <span class="brand-subtitle">四角に切れ • Tatami Partitions</span>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button id="btn-sound" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound">🔊</button>
+        <button id="btn-rules" class="icon-btn" title="How to Play" aria-label="How to Play">?</button>
+        <button id="btn-levels" class="icon-btn" title="Level Select" aria-label="Level Select">☰</button>
+      </div>
+    </header>
+
+    <!-- Level Bar & Stats -->
+    <div class="level-bar">
+      <div class="level-meta">
+        <span id="pack-name" class="pack-name">Tea Garden</span>
+        <span id="level-name" class="level-name">Level 1 (5×5)</span>
+      </div>
+      <div class="level-stats">
+        <div class="stat-item">
+          <span class="stat-label">Coverage</span>
+          <span id="stat-covered" class="stat-value">0%</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Rooms</span>
+          <span id="stat-rooms" class="stat-value">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Clues</span>
+          <span id="stat-clues" class="stat-value">0/9</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Selection Pill -->
+    <div id="drag-pill" class="drag-pill hidden">
+      <span id="drag-dimension">3 × 2</span>
+      <span class="drag-sep">=</span>
+      <span id="drag-area" class="drag-area-badge">6</span>
+      <span id="drag-status" class="drag-status-note">✓ Valid</span>
+    </div>
+
+    <!-- Interactive Tatami Floor Board -->
+    <main class="board-viewport">
+      <div class="board-container">
+        <svg id="board-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </main>
+
+    <!-- Deductive Hint Banner -->
+    <div id="hint-banner" class="hint-banner hidden">
+      <span class="hint-icon">💡</span>
+      <span id="hint-text" class="hint-text"></span>
+      <button id="btn-close-hint" class="hint-close" aria-label="Dismiss Hint">✕</button>
+    </div>
+
+    <!-- Action Toolbar -->
+    <footer class="controls-bar">
+      <button id="btn-undo" class="action-btn" title="Undo Last Move">
+        <span class="btn-icon">↺</span>
+        <span class="btn-label">Undo</span>
+      </button>
+      <button id="btn-reset" class="action-btn" title="Clear All Rooms">
+        <span class="btn-icon">🗑️</span>
+        <span class="btn-label">Reset</span>
+      </button>
+      <button id="btn-hint" class="action-btn" title="Get Deductive Hint">
+        <span class="btn-icon">💡</span>
+        <span class="btn-label">Hint</span>
+      </button>
+      <button id="btn-prev" class="action-btn" title="Previous Level">
+        <span class="btn-icon">◀</span>
+        <span class="btn-label">Prev</span>
+      </button>
+      <button id="btn-next" class="action-btn" title="Next Level">
+        <span class="btn-icon">▶</span>
+        <span class="btn-label">Next</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- Level Selection Modal -->
+  <div id="modal-levels" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">Select Chamber</h2>
+        <button id="close-levels" class="modal-close">✕</button>
+      </div>
+      <div class="pack-tabs" id="pack-tabs"></div>
+      <div class="modal-body">
+        <div class="level-grid" id="level-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules / How to Play Modal -->
+  <div id="modal-rules" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">Zen of Shikaku</h2>
+        <button id="close-rules" class="modal-close">✕</button>
+      </div>
+      <div class="modal-body rules-content">
+        <div class="rule-card">
+          <div class="rule-step">1</div>
+          <div class="rule-text">
+            <strong>Divide into Tatami Rooms</strong>
+            <p>Partition the entire floor grid into non-overlapping rectangles.</p>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-step">2</div>
+          <div class="rule-text">
+            <strong>Honor the Clue Numbers</strong>
+            <p>Every rectangular room must contain exactly one number, equal to that room's cell area.</p>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-step">3</div>
+          <div class="rule-text">
+            <strong>Complete Harmony</strong>
+            <p>No cells may be left empty, and no rooms may overlap.</p>
+          </div>
+        </div>
+        <div class="rule-tips">
+          <h4>Tactile Controls</h4>
+          <ul>
+            <li><strong>Drag:</strong> Press and drag across diagonal corners to lay a tatami mat.</li>
+            <li><strong>Two-Tap:</strong> Tap one corner, then tap the opposite corner.</li>
+            <li><strong>Remove:</strong> Tap any placed room to lift it.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-rules-start" class="primary-btn">Begin Meditation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Celebration Modal -->
+  <div id="modal-win" class="modal-overlay">
+    <div class="modal-box win-modal">
+      <div class="win-banner">
+        <div class="win-icon">🏯</div>
+        <h2 class="win-title">Floorplan Harmonized</h2>
+        <p class="win-subtitle" id="win-level-name">Tea Garden • Level 1</p>
+      </div>
+      <div class="win-stats">
+        <div class="win-stat-row">
+          <span>Tatami Rooms Placed:</span>
+          <strong id="win-rooms-count">9</strong>
+        </div>
+        <div class="win-stat-row">
+          <span>Board Coverage:</span>
+          <strong style="color: #78b885;">100%</strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-replay" class="secondary-btn">Review Layout</button>
+        <button id="btn-win-next" class="primary-btn">Next Chamber ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="shikaku-engine.js"></script>
+  <script src="levels.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
