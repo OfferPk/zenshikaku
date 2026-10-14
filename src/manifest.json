@@ -1,0 +1,18 @@
+{
+  "name": "ZenShikaku: Tatami Room Logic",
+  "short_name": "ZenShikaku",
+  "description": "Serene Japanese Shikaku (四角に切れ / Divide by Rectangles) offline puzzle. Partition grids into peaceful tatami rooms matching number clue areas.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#181d19",
+  "theme_color": "#2a332d",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!-- ZenShikaku: Serene Japanese Tatami Room Logic Puzzle (Shikaku / 四角に切れ) -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ZenShikaku - Tatami Room Logic</title>
+  <meta name="description" content="Serene Japanese Shikaku (四角に切れ / Divide by Rectangles) offline logic puzzle. Partition peaceful Japanese floorplans into tatami rooms matching number clue areas.">
+  <meta name="theme-color" content="#1a201c">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <span class="brand-icon">畳</span>
+        <div class="brand-text">
+          <h1 class="brand-title">ZenShikaku</h1>
+          <span class="brand-subtitle">四角に切れ</span>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button id="btn-sound" class="icon-btn" title="Toggle Sound (M)" aria-label="Toggle Sound">🔊</button>
+        <button id="btn-rules" class="icon-btn" title="How to Play" aria-label="Rules and Instructions">❓</button>
+        <button id="btn-levels" class="icon-btn" title="Select Level" aria-label="Select Level">☰</button>
+      </div>
+    </header>
+
+    <!-- Level Bar -->
+    <div class="level-bar">
+      <div class="level-meta">
+        <span id="pack-name" class="pack-name">Tea Garden</span>
+        <span id="level-name" class="level-name">Level 1 (5×5)</span>
+      </div>
+      <div class="level-stats">
+        <div class="stat-item" title="Grid cells covered">
+          <span class="stat-label">Covered</span>
+          <span id="stat-covered" class="stat-value">0%</span>
+        </div>
+        <div class="stat-item" title="Rooms placed">
+          <span class="stat-label">Rooms</span>
+          <span id="stat-rooms" class="stat-value">0</span>
+        </div>
+        <div class="stat-item" title="Clues satisfied">
+          <span class="stat-label">Clues</span>
+          <span id="stat-clues" class="stat-value">0/0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Selection / Dimension Pill -->
+    <div id="drag-pill" class="drag-pill hidden">
+      <span id="drag-dimension">0 × 0</span>
+      <span class="drag-sep">=</span>
+      <span id="drag-area" class="drag-area-badge">0</span>
+      <span id="drag-status" class="drag-status-note"></span>
+    </div>
+
+    <!-- Board Viewport -->
+    <div class="board-viewport">
+      <div class="board-container">
+        <svg id="board-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+          <!-- Dynamic SVG rendering from app.js -->
+        </svg>
+      </div>
+    </div>
+
+    <!-- Hint Banner -->
+    <div id="hint-banner" class="hint-banner hidden">
+      <span class="hint-icon">💡</span>
+      <span id="hint-text" class="hint-text"></span>
+      <button id="btn-close-hint" class="hint-close" aria-label="Dismiss hint">✕</button>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+      <button id="btn-undo" class="action-btn" title="Undo Last Room (U)">
+        <span class="btn-icon">⤺</span>
+        <span class="btn-label">Undo</span>
+      </button>
+
+      <button id="btn-hint" class="action-btn" title="Deductive Hint (H)">
+        <span class="btn-icon">💡</span>
+        <span class="btn-label">Hint</span>
+      </button>
+
+      <button id="btn-reset" class="action-btn" title="Reset Level (R)">
+        <span class="btn-icon">↺</span>
+        <span class="btn-label">Reset</span>
+      </button>
+
+      <button id="btn-prev" class="action-btn" title="Previous Level">
+        <span class="btn-icon">◀</span>
+        <span class="btn-label">Prev</span>
+      </button>
+
+      <button id="btn-next" class="action-btn" title="Next Level">
+        <span class="btn-icon">▶</span>
+        <span class="btn-label">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Level Select Modal -->
+  <div id="modal-levels" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Temple Floorplans</h3>
+        <button id="close-levels" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="pack-tabs" class="pack-tabs">
+          <!-- Populated by app.js -->
+        </div>
+        <div id="level-grid" class="level-grid">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules / How to Play Modal -->
+  <div id="modal-rules" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">How to Play Shikaku</h3>
+        <button id="close-rules" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body rules-content">
+        <div class="rule-card">
+          <div class="rule-step">1</div>
+          <div class="rule-text">
+            <strong>Divide into Rectangles</strong>
+            <p>Partition the entire floorplan into non-overlapping rectangular or square tatami rooms.</p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-step">2</div>
+          <div class="rule-text">
+            <strong>Match Room Area to Clue</strong>
+            <p>Every room must contain <em>exactly one</em> number clue, and the room's total area (Width × Height) must equal that number.</p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-step">3</div>
+          <div class="rule-text">
+            <strong>Complete the Floorplan</strong>
+            <p>Every cell on the floor must belong to a room without any gaps or overlapping rooms.</p>
+          </div>
+        </div>
+
+        <div class="rule-tips">
+          <h4>Controls & Tips</h4>
+          <ul>
+            <li><strong>Draw Room:</strong> Touch/click and drag from one corner to the opposite corner. Or tap one corner, then tap the opposite corner!</li>
+            <li><strong>Remove Room:</strong> Tap an existing room to delete it.</li>
+            <li><strong>Deductive Hints:</strong> Tap 💡 anytime for logical hints based on prime factoring and forced bounds.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-rules-start" class="primary-btn">Begin Harmonious Tiling</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Modal -->
+  <div id="modal-win" class="modal-overlay">
+    <div class="modal-box win-modal">
+      <div class="win-banner">
+        <div class="win-icon">🏯</div>
+        <h2 class="win-title">Floorplan Harmonized!</h2>
+        <p class="win-subtitle">All tatami mats placed in perfect balance.</p>
+      </div>
+      <div class="win-stats">
+        <div class="win-stat-row">
+          <span>Level Completed</span>
+          <strong id="win-level-name">Level 1 (5×5)</strong>
+        </div>
+        <div class="win-stat-row">
+          <span>Tatami Rooms</span>
+          <strong id="win-rooms-count">8 rooms</strong>
+        </div>
+      </div>
+      <div class="modal-footer win-footer">
+        <button id="btn-replay" class="secondary-btn">Replay</button>
+        <button id="btn-win-next" class="primary-btn">Next Floorplan ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="shikaku-engine.js"></script>
+  <script src="levels.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
