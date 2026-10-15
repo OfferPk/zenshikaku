@@ -99,7 +99,11 @@
   function updateSoundButton() {
     const btn = document.getElementById('btn-sound');
     if (btn) {
-      btn.textContent = audio.isAudioMuted() ? '🔇' : '🔊';
+      const muted = audio.isAudioMuted();
+      btn.textContent = muted ? '🔇' : '🔊';
+      btn.setAttribute('aria-label', muted ? 'Enable sound' : 'Mute sound');
+      btn.setAttribute('aria-pressed', muted.toString());
+      btn.title = muted ? 'Turn Sound On (M)' : 'Turn Sound Off (M)';
     }
   }
 
@@ -142,14 +146,28 @@
 
   // Coordinate Conversion
   function getGridCoords(evt) {
-    const rect = boardSvg.getBoundingClientRect();
     const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
     const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
 
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
     const svgSize = 500;
+    let x;
+    let y;
+    const screenCTM = boardSvg.getScreenCTM();
+    if (screenCTM && typeof boardSvg.createSVGPoint === 'function') {
+      const point = boardSvg.createSVGPoint();
+      point.x = clientX;
+      point.y = clientY;
+      const localPoint = point.matrixTransform(screenCTM.inverse());
+      x = localPoint.x;
+      y = localPoint.y;
+    } else {
+      const rect = boardSvg.getBoundingClientRect();
+      const scale = Math.min(rect.width / svgSize, rect.height / svgSize);
+      const offsetX = (rect.width - svgSize * scale) / 2;
+      const offsetY = (rect.height - svgSize * scale) / 2;
+      x = (clientX - rect.left - offsetX) / scale;
+      y = (clientY - rect.top - offsetY) / scale;
+    }
     const padding = 20;
     const boardArea = svgSize - padding * 2;
 
@@ -280,16 +298,18 @@
     dragDimEl.textContent = `${norm.width} × ${norm.height}`;
     dragAreaEl.textContent = norm.area.toString();
 
-    dragPillEl.classList.remove('valid', 'invalid');
+    dragPillEl.classList.remove('valid', 'invalid', 'needs-area', 'needs-clue');
     if (status.valid) {
       dragPillEl.classList.add('valid');
       dragStatusEl.textContent = '✓ Matches clue';
     } else if (status.reason === 'NO_CLUE') {
+      dragPillEl.classList.add('needs-clue');
       dragStatusEl.textContent = 'Needs a number';
     } else if (status.reason === 'MULTIPLE_CLUES') {
       dragPillEl.classList.add('invalid');
       dragStatusEl.textContent = 'Too many numbers';
     } else if (status.reason === 'WRONG_AREA') {
+      dragPillEl.classList.add('needs-area');
       dragStatusEl.textContent = `Needs ${status.targetArea}`;
     }
 
@@ -417,7 +437,7 @@
 
     // Render pack tabs
     packTabsContainer.innerHTML = packs.map((pack, idx) => `
-      <button class="pack-tab ${idx === selectedPackIndex ? 'active' : ''}" data-pack-idx="${idx}">
+      <button type="button" class="pack-tab ${idx === selectedPackIndex ? 'active' : ''}" aria-pressed="${idx === selectedPackIndex}" data-pack-idx="${idx}">
         ${pack.name} (${pack.size})
       </button>
     `).join('');
@@ -437,10 +457,10 @@
       const isCurrent = id === currentLevelId;
 
       html += `
-        <div class="level-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''}" data-level-id="${id}">
+        <button type="button" class="level-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''}" aria-label="Level ${id}${isCompleted ? ', completed' : ''}${isCurrent ? ', current level' : ''}" aria-pressed="${isCurrent}" data-level-id="${id}">
           <span class="level-card-num">${id}</span>
           ${isCompleted ? '<span class="level-card-star">★</span>' : ''}
-        </div>
+        </button>
       `;
     }
     levelGridContainer.innerHTML = html;
@@ -484,6 +504,7 @@
       selectedPackIndex = parseInt(tab.dataset.packIdx, 10);
       document.querySelectorAll('.pack-tab').forEach((t, i) => {
         t.classList.toggle('active', i === selectedPackIndex);
+        t.setAttribute('aria-pressed', (i === selectedPackIndex).toString());
       });
       renderLevelGrid();
     });

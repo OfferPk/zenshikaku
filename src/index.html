@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>ZenShikaku - Tatami Room Logic</title>
   <meta name="description" content="Serene Japanese Shikaku (四角に切れ / Divide by Rectangles) offline logic puzzle. Partition peaceful Japanese floorplans into tatami rooms matching number clue areas.">
   <meta name="theme-color" content="#1a201c">
@@ -36,7 +36,7 @@
         <span id="pack-name" class="pack-name">Tea Garden</span>
         <span id="level-name" class="level-name">Level 1 (5×5)</span>
       </div>
-      <div class="level-stats">
+      <div class="level-stats" role="group" aria-label="Puzzle progress">
         <div class="stat-item" title="Grid cells covered">
           <span class="stat-label">Covered</span>
           <span id="stat-covered" class="stat-value">0%</span>
@@ -63,7 +63,7 @@
     <!-- Board Viewport -->
     <div class="board-viewport">
       <div class="board-container">
-        <svg id="board-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+        <svg id="board-svg" role="group" aria-label="Interactive puzzle grid" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
           <!-- Dynamic SVG rendering from app.js -->
         </svg>
       </div>
