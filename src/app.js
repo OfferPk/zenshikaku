@@ -146,14 +146,28 @@
 
   // Coordinate Conversion
   function getGridCoords(evt) {
-    const rect = boardSvg.getBoundingClientRect();
     const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
     const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
 
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
     const svgSize = 500;
+    let x;
+    let y;
+    const screenCTM = boardSvg.getScreenCTM();
+    if (screenCTM && typeof boardSvg.createSVGPoint === 'function') {
+      const point = boardSvg.createSVGPoint();
+      point.x = clientX;
+      point.y = clientY;
+      const localPoint = point.matrixTransform(screenCTM.inverse());
+      x = localPoint.x;
+      y = localPoint.y;
+    } else {
+      const rect = boardSvg.getBoundingClientRect();
+      const scale = Math.min(rect.width / svgSize, rect.height / svgSize);
+      const offsetX = (rect.width - svgSize * scale) / 2;
+      const offsetY = (rect.height - svgSize * scale) / 2;
+      x = (clientX - rect.left - offsetX) / scale;
+      y = (clientY - rect.top - offsetY) / scale;
+    }
     const padding = 20;
     const boardArea = svgSize - padding * 2;
 
